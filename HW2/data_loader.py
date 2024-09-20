@@ -1,5 +1,4 @@
 import pandas as pd
-from sklearn.calibration import LabelEncoder
 
 def load_training_data(file_path):
     """
@@ -22,7 +21,6 @@ def load_training_data(file_path):
     # Drop the 'Geography' column since it's categorical and not useful for regression
     df = df.drop(columns=['Geography'])
     
-    # Check for missing values and handle them
     df = df.dropna()  
     
     return df
@@ -48,7 +46,6 @@ def load_test_data(file_path):
     # Drop the 'Geography' column since it's categorical and not useful for regression
     df = df.drop(columns=['Geography'])
 
-    # Check for missing values and handle them
     df = df.dropna()  
     
     return df

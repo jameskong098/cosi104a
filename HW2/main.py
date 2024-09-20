@@ -11,8 +11,13 @@ def main():
     
     target_columns = ['avgAnnCount', 'avgDeathsPerYear', 'TARGET_deathRate', 'incidenceRate']
     
-    # Get the common input features (excluding target columns)
-    common_features = test_df.columns.tolist()
+    # Define the most relevant features for each target variable (adjust as needed based on R-squared score)
+    feature_sets = {
+        'avgAnnCount': ['medIncome', 'popEst2015', 'povertyPercent', 'MedianAge', 'PercentMarried', 'PctNoHS18_24', 'PctHS18_24', 'PctSomeCol18_24', 'PctBachDeg18_24', 'PctHS25_Over', 'PctBachDeg25_Over', 'PctEmployed16_Over', 'PctUnemployed16_Over', 'PctPrivateCoverage', 'PctEmpPrivCoverage', 'PctPublicCoverage', 'PctPublicCoverageAlone', 'PctWhite', 'PctBlack', 'PctAsian', 'PctOtherRace', 'PctMarriedHouseholds', 'BirthRate', 'binnedInc1', 'binnedInc2'],
+        'avgDeathsPerYear': ['popEst2015', 'povertyPercent', 'studyPerCap', 'PctNoHS18_24', 'PctHS18_24', 'PctSomeCol18_24', 'PctBachDeg18_24', 'PctHS25_Over', 'PctBachDeg25_Over', 'PctEmployed16_Over', 'PctUnemployed16_Over', 'PctPrivateCoverage', 'PctWhite', 'PctBlack', 'PctAsian', 'PctOtherRace'],
+        'TARGET_deathRate': ['medIncome', 'popEst2015', 'povertyPercent', 'studyPerCap', 'MedianAge', 'MedianAgeMale', 'MedianAgeFemale', 'AvgHouseholdSize', 'PercentMarried', 'PctNoHS18_24', 'PctHS18_24', 'PctSomeCol18_24', 'PctBachDeg18_24', 'PctHS25_Over', 'PctBachDeg25_Over', 'PctEmployed16_Over', 'PctUnemployed16_Over', 'PctPrivateCoverage', 'PctPrivateCoverageAlone', 'PctEmpPrivCoverage', 'PctPublicCoverage', 'PctPublicCoverageAlone', 'PctWhite', 'PctBlack', 'PctAsian', 'PctOtherRace', 'PctMarriedHouseholds', 'BirthRate', 'binnedInc1', 'binnedInc2'],
+        'incidenceRate': ['studyPerCap', 'PctNoHS18_24', 'PctHS18_24', 'PctSomeCol18_24', 'PctBachDeg18_24', 'PctHS25_Over', 'PctPrivateCoverage', 'PctPrivateCoverageAlone', 'PctEmpPrivCoverage', 'PctPublicCoverage', 'PctPublicCoverageAlone', 'PctWhite', 'PctBlack', 'PctAsian', 'PctOtherRace']
+    }
 
     validation_predictions = pd.DataFrame()
     test_predictions = pd.DataFrame()
@@ -21,15 +26,15 @@ def main():
     for target_col in target_columns:
         print(f"\nTraining model for {target_col}...")
 
-        # Use only common features for training to avoid column mismatch
-        X_train, X_val, y_train, y_val = split_data(train_df[common_features + [target_col]], target_col=target_col)
-
+        # Use only relevant features for the current target
+        relevant_features = feature_sets[target_col]
+        X_train, X_val, y_train, y_val = split_data(train_df[relevant_features + [target_col]], target_col=target_col)
+        
+        # Standardize the features
         scaler = StandardScaler()
-
-        # Standardize features
         X_train_scaled = scaler.fit_transform(X_train)
         X_val_scaled = scaler.transform(X_val)
-
+        
         model = train_model(X_train_scaled, y_train)
         
         coefficients, intercept = get_model_params(model)
@@ -38,15 +43,15 @@ def main():
 
         y_val_pred = model.predict(X_val_scaled)
         r2 = r2_score(y_val, y_val_pred)
-        print(f"Validation R² Score for {target_col} (1 is Perfect): {r2}\n")
-        print(f"Data Fit: {r2*100:.2f}%\n")
+        print(f"Validation R² Score for {target_col} (1 is Perfect): {r2:.4f}\n")
+        print(f"Data Fit: {r2 * 100:.2f}%\n")
         
         validation_predictions[target_col] = y_val_pred
 
-        X_test = test_df[common_features]
-        X_test_scaled = scaler.transform(X_test)  
-
+        X_test = test_df[relevant_features]
+        X_test_scaled = scaler.transform(X_test)
         y_test_pred = model.predict(X_test_scaled)
+        
         test_predictions[target_col] = y_test_pred
 
         print("===================\n")
