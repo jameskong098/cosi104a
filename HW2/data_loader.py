@@ -14,12 +14,13 @@ def load_training_data(file_path):
     df = pd.read_csv(file_path)
 
     # Clean "binnedInc" column as it is a string of ranged values
-    label_encoder = LabelEncoder()
-    df['binnedInc'] = label_encoder.fit_transform(df['binnedInc'])
+    df[['binnedInc1', 'binnedInc2']] = df['binnedInc'].str.extract(r'\((.*), (.*)\]')
+    df['binnedInc1'] = df['binnedInc1'].astype(float)
+    df['binnedInc2'] = df['binnedInc2'].astype(float)
+    df = df.drop(columns=['binnedInc'])
     
     # Drop the 'Geography' column since it's categorical and not useful for regression
-    # Drop 'incidenceRate', 'avgAnnCount', and 'avgDeathsPerYear' columns since the test set does not contain those columns 
-    df = df.drop(columns=['Geography', 'incidenceRate', 'avgAnnCount', 'avgDeathsPerYear'])
+    df = df.drop(columns=['Geography'])
     
     # Check for missing values and handle them
     df = df.dropna()  
@@ -39,8 +40,10 @@ def load_test_data(file_path):
     df = pd.read_csv(file_path)
 
     # Clean "binnedInc" column as it is a string of ranged values
-    label_encoder = LabelEncoder()
-    df['binnedInc'] = label_encoder.fit_transform(df['binnedInc'])
+    df[['binnedInc1', 'binnedInc2']] = df['binnedInc'].str.extract(r'\((.*), (.*)\]')
+    df['binnedInc1'] = df['binnedInc1'].astype(float)
+    df['binnedInc2'] = df['binnedInc2'].astype(float)
+    df = df.drop(columns=['binnedInc'])
     
     # Drop the 'Geography' column since it's categorical and not useful for regression
     df = df.drop(columns=['Geography'])
