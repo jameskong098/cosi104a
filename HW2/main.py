@@ -1,9 +1,21 @@
+"""
+Author: James Kong
+Course: COSI 116A - Introduction to Machine Learning
+Assignment: HW2
+Date: 09/24/24
+
+Description:
+This script builds linear regression models using HW1_training.csv to predict avgAnnCount, avgDeathsPerYear, 
+TARGET_deathRate, and incidenceRate. Predictions are made on HW1_test_X.csv and saved in HW1_test_Y.csv. 
+Components submitted include model weights, validation predictions, test predictions, and a README.md for instructions.
+"""
+
 import pandas as pd
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score
 from data_loader import load_training_data, load_test_data
-from utils import split_data
+from utils import split_data, save_model_params, save_trained_model
 from model_trainer import train_model, get_model_params
 
 def main():
@@ -30,10 +42,15 @@ def main():
         
         model = train_model(X_train_scaled, y_train)
         
-        # Get coefficients and intercept
         coefficients, intercept = get_model_params(model)
         print(f"\nCoefficients for {target_col}:", coefficients)
         print(f"Intercept for {target_col}:", intercept, "\n")
+
+        # Save model coefficients and intercept to .csv file in trained_models directory
+        save_model_params(target_col, coefficients, intercept)
+
+        # Save the trained model as a .pkl file to trained_models directory
+        save_trained_model(model, target_col)
 
         # Validation R² Score for single split with custom random_state
         y_val_pred = model.predict(X_val_scaled)

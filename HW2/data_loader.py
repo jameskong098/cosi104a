@@ -25,7 +25,7 @@ def preprocess_data(df):
 
 def load_training_data(file_path):
     df = pd.read_csv(file_path)
-    df = preprocess_data(df)  # Preprocess the data
+    df = preprocess_data(df) 
 
     target_columns = ['avgAnnCount', 'avgDeathsPerYear', 'TARGET_deathRate', 'incidenceRate']
     
@@ -41,6 +41,6 @@ def load_training_data(file_path):
 
 def load_test_data(file_path):
     df = pd.read_csv(file_path)
-    df = preprocess_data(df)  # Preprocess the data
+    df = preprocess_data(df)  
 
     return df
