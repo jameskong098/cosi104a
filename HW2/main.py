@@ -25,10 +25,10 @@ def main():
     validation_single_split_predictions = pd.DataFrame()
     test_predictions = pd.DataFrame()
 
+    print()
+
     # Train a separate model for each target column and generate predictions
     for target_col in target_columns:
-        print(f"\nTraining model for {target_col}...")
-
         relevant_features = feature_sets[target_col]
         
         # Train-validation split using a custom random_state
@@ -43,8 +43,6 @@ def main():
         model = train_model(X_train_scaled, y_train)
         
         coefficients, intercept = get_model_params(model)
-        print(f"\nCoefficients for {target_col}:", coefficients)
-        print(f"Intercept for {target_col}:", intercept, "\n")
 
         # Save model coefficients and intercept to .csv file in trained_models directory
         save_model_params(target_col, coefficients, intercept)
