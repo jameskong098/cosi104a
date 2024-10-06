@@ -45,8 +45,7 @@ def train_svm(X_train, y_train, use_cross_val=True):
         # Save validation results with indices (row numbers) in a CSV file
         validation_results = pd.DataFrame({
             'Index': X_val_split.index, 
-            'True_Label': y_val_split,
-            'Predicted_Label': val_predictions
+            'Label': val_predictions
         })
         
         validation_results.to_csv('validation_results.csv', index=False)
