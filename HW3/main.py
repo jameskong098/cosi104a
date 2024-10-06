@@ -22,7 +22,7 @@ def main():
     X_train, y_train, X_test = load_data(train_file, test_file)
     
     # Set use_cross_val to False to use single train-test split
-    svm_model = train_svm(X_train, y_train, use_cross_val=True)
+    svm_model = train_svm(X_train, y_train, use_cross_val=False)
     
     predictions = svm_model.predict(X_test)
     

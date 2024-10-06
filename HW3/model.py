@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
@@ -16,7 +17,7 @@ def train_svm(X_train, y_train, use_cross_val=True):
     Returns:
     - Trained SVM model.
     """
-    svm_model = make_pipeline(StandardScaler(), SVC(kernel='linear'))
+    svm_model = make_pipeline(StandardScaler(), SVC(kernel='rbf'))
     
     if use_cross_val:
         # Option 1: Using Cross-validation
@@ -37,5 +38,18 @@ def train_svm(X_train, y_train, use_cross_val=True):
         # Evaluate on the validation subset
         val_accuracy = svm_model.score(X_val_split, y_val_split)
         print(f"\nValidation accuracy on single split: {val_accuracy}\n")
+        
+        # Get predictions on the validation set
+        val_predictions = svm_model.predict(X_val_split)
+        
+        # Save validation results with indices (row numbers) in a CSV file
+        validation_results = pd.DataFrame({
+            'Index': X_val_split.index, 
+            'True_Label': y_val_split,
+            'Predicted_Label': val_predictions
+        })
+        
+        validation_results.to_csv('validation_results.csv', index=False)
+        print("Validation results have been saved to 'validation_results.csv'.")
     
     return svm_model

@@ -49,7 +49,7 @@ This module contains the SVM model training logic.
 
 - **Function: `train_svm(X_train, y_train, use_cross_val=True)`**
   
-  Trains the SVM model with the option to perform cross-validation or a single train-test split.
+  Trains the SVM model with the option to perform cross-validation or a single train-test split. A `validation_results.csv` file is also created containing the predicted labels for the validation set along with their corresponding indices (if single `train_test_split` is selected).
 
   **Parameters:**
   - `X_train`: Features for training.
@@ -68,9 +68,11 @@ This module contains the SVM model training logic.
 
 2. Place your training and testing CSV files in the same directory as the script. Ensure that the training file contains a `Label` column.
 
-3. Run the `main.py` script:
+3. Set `use_cross_val` boolean to `True` or `False` in order to use `cross_val_score` multi-split instead of `train_test_split` single split. If using `train_test_split`, you can change the `test_size` and `random_state` parameters within the `model.py` file and `train_test_split` function call.
+
+4. Run the `main.py` script:
    ```bash
    python main.py
    ```
 
-4. The predictions will be saved to a file named `HW3_Test_Output.csv`.
+5. The predictions will be saved to a file named `HW3_Test_Output.csv`. If `train_test_split` is used, `validation_results.csv` is created as well.
