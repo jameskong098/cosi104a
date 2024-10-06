@@ -26,7 +26,7 @@ def main():
     
     predictions = svm_model.predict(X_test)
     
-    pd.DataFrame(predictions, columns=["Prediction"]).to_csv(output_file, index=False)
+    pd.DataFrame(predictions, columns=["Label"]).to_csv(output_file, index=False)
 
 if __name__ == '__main__':
     main()

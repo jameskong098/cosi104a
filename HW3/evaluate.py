@@ -21,7 +21,7 @@ def evaluate_predictions(output_file, label_file):
     if len(predicted_data) != len(actual_data):
         raise ValueError("Mismatch in number of rows between the predicted output and actual labels.")
     
-    predicted_labels = predicted_data['Prediction']
+    predicted_labels = predicted_data['Label']
     actual_labels = actual_data['Label']
     
     accuracy = accuracy_score(actual_labels, predicted_labels)
