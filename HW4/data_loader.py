@@ -2,6 +2,9 @@
 data_loader.py
 
 This module contains functions to load training and test data from CSV files.
+
+Functions:
+- load_data(train_file, test_file): Loads training and test data from CSV files.
 """
 
 import pandas as pd
