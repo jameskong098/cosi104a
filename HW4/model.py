@@ -68,10 +68,9 @@ def train_and_evaluate_model(X_train, y_train, feature_names):
         best_params = grid_search.best_params_
         with open(param_file, 'w') as file:
             json.dump(best_params, file)
-        print(f"\nSaved best parameters to {param_file}: {best_params}")
+        print(f"\nSaved best parameters to {param_file}: {best_params}\n")
 
         best_score = grid_search.best_score_
-        print(f"\nHighest F1 Score from GridSearchCV: {best_score}")
 
     # Save the highest validation F1 score
     if os.path.exists(highest_f1_file):
@@ -84,9 +83,9 @@ def train_and_evaluate_model(X_train, y_train, feature_names):
         with open(highest_f1_file, 'w') as file:
             file.write(str(best_score))
         highest_f1_score = best_score
-        print(f"New highest validation F1 Score: {highest_f1_score}")
+        print(f"New highest validation F1 Score: {highest_f1_score}\n")
     else:
-        print(f"Highest validation F1 Score remains: {highest_f1_score}")
+        print(f"Highest validation F1 Score remains: {highest_f1_score}\n")
 
     model.fit(X_train, y_train)
     return model
