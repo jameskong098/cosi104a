@@ -40,14 +40,14 @@ def train_and_evaluate_model(X_train, y_train, feature_names):
         print(f"\nLoaded best parameters from {param_file}: {best_params}")
     else:
         param_grid = {
-            'max_depth': [3, 5, 7, 10],
-            'min_samples_split': [2, 5, 10],
-            'min_samples_leaf': [1, 2, 4]
+            'max_depth': [3, 5, 7, 10, 15, 20, 25],
+            'min_samples_split': [2, 5, 10, 15, 20],
+            'min_samples_leaf': [1, 2, 4, 6, 8, 10]
         }
         model = DecisionTreeClassifier(random_state=42)
         f1_scorer = make_scorer(f1_score)
         print(f"\nPerforming GridSearchCV for best parameters...")
-        grid_search = GridSearchCV(model, param_grid, cv=5, scoring=f1_scorer)
+        grid_search = GridSearchCV(model, param_grid, cv=5, scoring=f1_scorer, n_jobs=-1)
         grid_search.fit(X_train, y_train)
         best_params = grid_search.best_params_
         with open(param_file, 'w') as file:
@@ -96,3 +96,4 @@ def make_predictions(model, X_test, output_file):
     predictions = model.predict(X_test)
     output_df = pd.DataFrame({'isFraud': predictions})
     output_df.to_csv(output_file, index=False)
+    
