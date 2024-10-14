@@ -22,7 +22,6 @@ def main():
 
     X_train, X_test, feature_names = preprocess_data(X_train, X_test)
 
-    # Train the model with cross-validation and evaluate
     model = train_and_evaluate_model(X_train, y_train, feature_names)
 
     make_predictions(model, X_test, 'HW4_test_output.csv')

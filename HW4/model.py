@@ -12,11 +12,15 @@ Functions:
 import pandas as pd
 from sklearn.metrics import make_scorer, f1_score
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score, GridSearchCV
+import os
+import json
 
 def train_and_evaluate_model(X_train, y_train, feature_names):
     """
     Train a DecisionTreeClassifier with cross-validation and evaluate using F1 score.
+    Optimize hyperparameters using GridSearchCV and save the best parameters to hyper_parameters.txt.
+    Save the highest validation F1 score to highest_f1_score.txt and update it if the latest score is higher.
 
     Parameters:
     - X_train (ndarray): Preprocessed features of the training data.
@@ -29,12 +33,50 @@ def train_and_evaluate_model(X_train, y_train, feature_names):
     print(f"\nTraining model with {X_train.shape[0]} samples and {X_train.shape[1]} features...\n")
     print(f"Features: {feature_names}")
 
-    model = DecisionTreeClassifier(random_state=42)
+    param_file = 'hyper_parameters.txt'
+    if os.path.exists(param_file):
+        with open(param_file, 'r') as file:
+            best_params = json.load(file)
+        print(f"\nLoaded best parameters from {param_file}: {best_params}")
+    else:
+        param_grid = {
+            'max_depth': [3, 5, 7, 10],
+            'min_samples_split': [2, 5, 10],
+            'min_samples_leaf': [1, 2, 4]
+        }
+        model = DecisionTreeClassifier(random_state=42)
+        f1_scorer = make_scorer(f1_score)
+        print(f"\nPerforming GridSearchCV for best parameters...")
+        grid_search = GridSearchCV(model, param_grid, cv=5, scoring=f1_scorer)
+        grid_search.fit(X_train, y_train)
+        best_params = grid_search.best_params_
+        with open(param_file, 'w') as file:
+            json.dump(best_params, file)
+        print(f"\nSaved best parameters to {param_file}: {best_params}")
+
+    model = DecisionTreeClassifier(random_state=42, **best_params)
     f1_scorer = make_scorer(f1_score)
     scores = cross_val_score(model, X_train, y_train, cv=5, scoring=f1_scorer)
 
     print(f'\nCross-Validation F1 Scores: {scores}')
-    print(f'Mean F1 Score: {scores.mean()}\n')
+    mean_f1_score = scores.mean()
+    print(f'Mean F1 Score: {mean_f1_score}\n')
+
+    # Save the highest validation F1 score
+    highest_f1_file = 'highest_f1_score.txt'
+    if os.path.exists(highest_f1_file):
+        with open(highest_f1_file, 'r') as file:
+            highest_f1_score = float(file.read())
+    else:
+        highest_f1_score = 0.0
+
+    if mean_f1_score > highest_f1_score:
+        with open(highest_f1_file, 'w') as file:
+            file.write(str(mean_f1_score))
+        highest_f1_score = mean_f1_score
+        print(f"New highest validation F1 Score: {highest_f1_score}!!!\n")
+    else:
+        print(f"Highest validation F1 Score remains: {highest_f1_score}\n")
 
     model.fit(X_train, y_train)
     return model
