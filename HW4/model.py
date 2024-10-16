@@ -68,9 +68,11 @@ def train_and_evaluate_model(X_train, y_train, feature_names):
         best_params = grid_search.best_params_
         with open(param_file, 'w') as file:
             json.dump(best_params, file)
-        print(f"\nSaved best parameters to {param_file}: {best_params}\n")
+        print(f"\nSaved best parameters to {param_file}: {best_params}")
 
         best_score = grid_search.best_score_
+
+        print(f"\nBest GridSearch F1 Score: {best_score}\n")
 
     # Save the highest validation F1 score
     if os.path.exists(highest_f1_file):
