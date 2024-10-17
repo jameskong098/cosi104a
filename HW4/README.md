@@ -51,7 +51,7 @@ This project aims to build a model for detecting fraudulent transactions using `
 
 ### `model.py`
 
-- `train_and_evaluate_model(X_train, y_train, feature_names)`: Trains and evaluates the model.
+- `train_and_evaluate_model(X_train, y_train, feature_names)`: Trains and evaluates the model. Also tunes hyper-parameters to optimize model.
   - **Parameters**:
     - `X_train` (ndarray): Preprocessed features of the training data.
     - `y_train` (Series): Labels of the training data.

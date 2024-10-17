@@ -72,6 +72,8 @@ def train_and_evaluate_model(X_train, y_train, feature_names):
 
         best_score = grid_search.best_score_
 
+        model = DecisionTreeClassifier(random_state=42, **best_params)
+
         print(f"\nBest GridSearch F1 Score: {best_score}\n")
 
     # Save the highest validation F1 score
