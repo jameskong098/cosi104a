@@ -14,14 +14,6 @@ This course provides a foundational understanding of essential machine learning 
 - Reinforcement Learning and Markov Decision Processes
 - Applications in various industries
 
-## Repository Structure
-
-Each assignment is organized in a separate folder, containing:
-
-- **`code/`**: Source code files implementing the models and algorithms.
-- **`report/`**: Reports summarizing the results, model performance, and insights gained.
-- **`data/`**: Datasets used for training and testing (where applicable).
-
 ## Assignments
 
 1. **Assignment 0**: Basic math for machine learning and Python programming
@@ -46,15 +38,6 @@ Each assignment is organized in a separate folder, containing:
 - **Midterm Exam**: 20%
 - **Assignments**: 50%
 - **Final Project**: 20%
-
-## Getting Started
-
-To get started, clone the repository:
-
-```bash
-git clone https://github.com/jameskong098/cosi104a.git
-cd cosi104a
-```
 
 Each assignment folder includes specific instructions for running the code and replicating the results.
 
