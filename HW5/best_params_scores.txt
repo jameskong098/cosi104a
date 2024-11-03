@@ -1,0 +1,2 @@
+{'mlpclassifier__activation': 'relu', 'mlpclassifier__learning_rate_init': 0.001, 'mlpclassifier__max_iter': 400, 'mlpclassifier__solver': 'sgd'}
+{'full_dataset': 0.9003902282224365, 'partial_dataset': 0.8802905916080271}
