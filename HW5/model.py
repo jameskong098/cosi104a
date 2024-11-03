@@ -5,6 +5,11 @@ from sklearn.pipeline import make_pipeline
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import roc_auc_score
 
+import warnings
+from sklearn.exceptions import ConvergenceWarning
+
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
+
 def load_best_params_scores(file_path):
     try:
         with open(file_path, 'r') as file:
@@ -38,16 +43,13 @@ def train_nn(X_train, y_train, use_full_dataset, force_retune):
 
     if best_params is None or force_retune:
         param_grid = {
-            'mlpclassifier__activation': ['relu', 'tanh', 'logistic'],
-            'mlpclassifier__solver': ['adam', 'sgd', 'lbfgs'],
-            'mlpclassifier__max_iter': [200, 300, 400, 500],  
-            'mlpclassifier__learning_rate_init': [0.0001, 0.001, 0.01, 0.1], 
-            'mlpclassifier__hidden_layer_sizes': [(50,), (100,), (50, 50), (100, 50)],  
-            'mlpclassifier__alpha': [0.0001, 0.001, 0.01, 0.1],  
-            'mlpclassifier__batch_size': ['auto', 32, 64, 128], 
-            'mlpclassifier__learning_rate': ['constant', 'invscaling', 'adaptive']  
+            'mlpclassifier__hidden_layer_sizes': [(50,), (100,), (50, 50), (100, 100)],
+            'mlpclassifier__activation': ['tanh', 'relu'],
+            'mlpclassifier__solver': ['adam'],
+            'mlpclassifier__alpha': [0.0001, 0.001],
+            'mlpclassifier__learning_rate': ['constant'],
+            'mlpclassifier__max_iter': [200, 400]
         }
-
 
         print("\nSearching for best parameters using GridSearchCV...")
 
