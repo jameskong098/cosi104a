@@ -25,7 +25,7 @@ def main():
     X_train, X_test = preprocess_data(X_train, X_test)
     
     # Set use_full_dataset to False to use single train-test split
-    nn_model = train_nn(X_train, y_train, use_full_dataset=True, force_retune=False)
+    nn_model = train_nn(X_train, y_train, use_full_dataset=True)
     
     predictions = nn_model.predict(X_test)
     

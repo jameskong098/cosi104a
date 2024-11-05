@@ -24,7 +24,7 @@ def preprocess_data(X_train, X_test):
     - X_test (ndarray): Preprocessed test data.
     - feature_names (list): List of feature names.
     """
-    categorical_cols = ['Gender', 'Education', 'Marital', 'Income', 'KCategory']
+    categorical_cols = ['Gender', 'Education', 'Marital', 'Income', 'KCategory', 'Group']
     numerical_cols = X_train.columns.difference(categorical_cols)
 
     preprocessor = ColumnTransformer(
@@ -33,7 +33,6 @@ def preprocess_data(X_train, X_test):
             ('cat', OneHotEncoder(), categorical_cols)
         ])
 
-    # Fit the preprocessor and transform the data
     X_train = preprocessor.fit_transform(X_train)
     X_test = preprocessor.transform(X_test)
 

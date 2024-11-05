@@ -19,7 +19,6 @@ This project aims to build a neural network model to predict the class labels of
 - `model.py`: Contains functions to train and evaluate a neural network model, and to make predictions on the test data.
 - `main.py`: Orchestrates the data loading, preprocessing, model training, and prediction steps.
 - `test.py`: Script to load and evaluate the prediction results.
-- `best_params_scores.txt`: Stores the best parameters and scores for the model.
 - `train_data.csv`: Training data file.
 - `test_data.csv`: Test data file.
 - `test_label-me.csv`: Output file for predictions.
@@ -49,25 +48,13 @@ This project aims to build a neural network model to predict the class labels of
 
 ### `model.py`
 
-- `train_nn(X_train, y_train, use_full_dataset, force_retune)`: Trains a neural network model with either cross-validation or a single train-test split.
+- `train_nn(X_train, y_train, use_full_dataset)`: Trains a neural network model with either cross-validation or a single train-test split.
   - **Parameters**:
     - `X_train` (ndarray): Features for training.
     - `y_train` (ndarray): Labels for training.
     - `use_full_dataset` (bool): Flag to use the full dataset for training.
-    - `force_retune` (bool): Flag to force retuning of hyperparameters.
   - **Returns**:
     - `nn_model` (Pipeline): Trained neural network model.
-- `save_best_params_scores(file_path, best_params, best_scores)`: Saves the best parameters and scores to a file.
-  - **Parameters**:
-    - `file_path` (str): Path to the file where parameters and scores will be saved.
-    - `best_params` (dict): Best hyperparameters.
-    - `best_scores` (dict): Best scores.
-- `load_best_params_scores(file_path)`: Loads the best parameters and scores from a file.
-  - **Parameters**:
-    - `file_path` (str): Path to the file from which parameters and scores will be loaded.
-  - **Returns**:
-    - `best_params` (dict): Best hyperparameters.
-    - `best_scores` (dict): Best scores.
 
 ### `test.py`
 
@@ -100,13 +87,9 @@ This project aims to build a neural network model to predict the class labels of
       - Set to `True` to use the full dataset for training with cross-validation.
       - Set to `False` to use a single train-test split for training.
 
-    - `force_retune` (bool): 
-      - Set to `True` to force retuning of hyperparameters using GridSearchCV.
-      - Set to `False` to use previously saved best parameters if available.
-
     Example:
     ```python
-    nn_model = train_nn(X_train, y_train, use_full_dataset=True, force_retune=True)
+    nn_model = train_nn(X_train, y_train, use_full_dataset=True)
     ```
 
 3. Run the `main.py` script to train the model and make predictions:
