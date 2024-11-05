@@ -42,6 +42,39 @@ This project aims to build a neural network model to predict the class labels of
   - **Parameters**:
     - `X_train` (DataFrame): Features of the training data.
     - `X_test` (DataFrame): Features of the test data.
+  - **Returns**:
+    - `X_train` (ndarray): Preprocessed training data.
+    - `X_test` (ndarray): Preprocessed test data.
+    - `feature_names` (list): List of feature names.
+
+### `model.py`
+
+- `train_nn(X_train, y_train, use_full_dataset=True)`: Trains a neural network model using the training data.
+  - **Parameters**:
+    - `X_train` (ndarray): Preprocessed features of the training data.
+    - `y_train` (Series): Labels of the training data.
+    - `use_full_dataset` (bool): Whether to use the full dataset for training (and using cross validation) or partial dataset and (and using train_test_split).
+  - **Returns**:
+    - `model` (object): Trained neural network model.
+
+### `main.py`
+
+- `main()`: Orchestrates the data loading, preprocessing, model training, and prediction steps.
+  - **Steps**:
+    1. Loads the training and test data using `load_data`.
+    2. Preprocesses the data using `preprocess_data`.
+    3. Trains the neural network model using `train_nn`.
+    4. Makes predictions on the test data.
+    5. Saves the predictions to `test_label-me.csv`.
+
+### `test.py`
+
+- `evaluate_predictions(predictions_file, true_labels_file)`: Evaluates the prediction results.
+  - **Parameters**:
+    - `predictions_file` (str): Path to the CSV file containing the predicted labels.
+    - `true_labels_file` (str): Path to the CSV file containing the true labels.
+  - **Returns**:
+    - `accuracy` (float): Accuracy of the predictions.
 
 ## Results
 
