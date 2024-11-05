@@ -12,7 +12,7 @@ def train_nn(X_train, y_train, use_full_dataset):
     Parameters:
     - X_train: Features for training.
     - y_train: Labels for training.
-    - use_cross_val: Boolean flag to use cross-validation or single train-test split.
+    - use_full_dataset: Boolean flag to use train with full dataset and validate using cross-validation or partial dataset validating with single train-test split.
     
     Returns:
     - Trained neural network model.
