@@ -42,96 +42,27 @@ This project aims to build a neural network model to predict the class labels of
   - **Parameters**:
     - `X_train` (DataFrame): Features of the training data.
     - `X_test` (DataFrame): Features of the test data.
-  - **Returns**:
-    - `X_train` (ndarray): Preprocessed training data.
-    - `X_test` (ndarray): Preprocessed test data.
 
-### `model.py`
+## Results
 
-- `train_nn(X_train, y_train, use_full_dataset)`: Trains a neural network model with either cross-validation or a single train-test split.
-  - **Parameters**:
-    - `X_train` (ndarray): Features for training.
-    - `y_train` (ndarray): Labels for training.
-    - `use_full_dataset` (bool): Flag to use the full dataset for training.
-  - **Returns**:
-    - `nn_model` (Pipeline): Trained neural network model.
+### Training Results
+```bash
+Cross-validation AUC scores: [0.89212793, 0.89845066, 0.90024429, 0.88768563, 0.88260366]
 
-### `test.py`
+Mean cross-validation AUC: 0.8922224365155899
+```
+### Interpretation of Results
 
-- `evaluate_predictions(predictions_file)`: Loads and evaluates the prediction results using the AUC score.
-  - **Parameters**:
-    - `predictions_file` (str): Path to the predictions file.
-  - **Returns**:
-    - `auc_score` (float): AUC score of the predictions.
+The `AUC (Area Under the ROC Curve)` score is a performance metric for classification models. It measures the ability of the model to distinguish between classes. An AUC score of 0.5 indicates no discrimination (i.e., random guessing), while an AUC score of 1.0 indicates perfect discrimination.
 
-### `main.py`
+In this project, the mean cross-validation AUC score is approximately 0.8922. This score indicates that the neural network model has a good ability to distinguish between the classes in the training data. Generally, an AUC score above 0.85 is considered good, and a score above 0.9 is considered excellent. Therefore, our model's performance is quite satisfactory.
 
-- `main()`: Orchestrates the data loading, preprocessing, model training, and prediction steps.
-  - **Steps**:
-    1. Loads the training and test data.
-    2. Preprocesses the data.
-    3. Trains the neural network model.
-    4. Makes predictions on the test data.
-    5. Saves the predictions to `test_label-me.csv`.
+### Prediction on Test Data
 
-## How to Run
+The trained neural network model is used to predict the "Class" labels for the test samples in `test_data.csv`. The predicted labels are saved in the `test_label-me.csv` file. The AUC score provides confidence that the model will perform well on unseen test data, making accurate predictions for the "Class" labels.
 
-1. Ensure you have all the required libraries installed:
-    ```sh
-    pip install pandas scikit-learn
-    ```
+The `test_label-me.csv` file contains the predicted "Class" labels, which can be used for further analysis or evaluation.
 
-2. Configure the `train_nn` parameters in `main.py`:
+## Conclusion
 
-    - `use_full_dataset` (bool): 
-      - Set to `True` to use the full dataset for training with cross-validation.
-      - Set to `False` to use a single train-test split for training.
-
-    Example:
-    ```python
-    nn_model = train_nn(X_train, y_train, use_full_dataset=True)
-    ```
-
-3. Run the `main.py` script to train the model and make predictions:
-    ```sh
-    python main.py
-    ```
-
-4. The predictions will be saved in `test_label-me.csv`.
-
-5. To evaluate the predictions, run the `test.py` script:
-    ```sh
-    python test.py
-    ```
-
-## Dataset Information
-
-- **Customer_Age**: continuous
-- **Gender**: categorical
-- **Dependent**: continuous
-- **Education**: categorical
-- **Marital**: categorical
-- **Income**: categorical
-- **KCategory**: categorical
-- **onBook**: continuous
-- **Relationship**: continuous
-- **Inactive**: continuous
-- **ContactNum**: continuous
-- **CLimit**: continuous
-- **Revolving**: continuous
-- **Open**: continuous
-- **Amt_41**: continuous
-- **TransAmt**: continuous
-- **TransCt**: continuous
-- **Ct_41**: continuous
-- **Utilization**: continuous
-- **Importance**: continuous
-- **MustHave**: continuous
-- **Group**: categorical
-- **Essential**: continuous
-- **DropLevel**: continuous
-
-## Submission Requirements
-
-- **Prediction Result File**: `test_label-me.csv`
-- **Explanation and Results Report**: A PDF file explaining the code and reporting the results.
+The neural network model trained in this project demonstrates good performance with a mean cross-validation AUC score of 0.8922. This indicates that the model is most likely effective in predicting the "Class" labels for the given dataset.
