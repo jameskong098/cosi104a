@@ -81,7 +81,7 @@ Mean cross-validation F1 Score: 0.8327848907637984
 ```
 
 ### Interpretation of Results
-The `F1 score` is a performance metric for classification models. It measures the balance between precision and recall. An F1 score of 1.0 indicates perfect precision and recall, while a score of 0 indicates the worst performance. In this project, the mean cross-validation F1 score is approximately 0.8328. This score indicates that the ensemble model has a good balance between precision and recall in the training data. Generally, an F1 score above 0.85 is considered good, and a score above 0.9 is considered excellent. Therefore, our model's performance is satisfactory since it is very close to 0.85.
+The `F1 score` is a performance metric for classification models. It measures the balance between precision and recall. An F1 score of 1.0 indicates perfect precision and recall, while a score of 0 indicates the worst performance. In this project, the mean cross-validation F1 score is approximately 0.8328. This score indicates that the ensemble model has a good balance between precision and recall in the training data. Generally, an F1 score 0.8 - 0.9 is considered good, and a score above 0.9 is considered excellent. Therefore, our model's performance is satisfactory.
 
 ### Prediction on Test Data
 The trained ensemble model is used to predict the "Class" labels for the test samples in `test_data.csv`. The predicted labels are saved in the `test_label.csv` file. The F1 score provides confidence that the model will perform well on unseen test data, making accurate predictions for the "Class" labels. The `test_label.csv` file contains the predicted "Class" labels, which can be used for further analysis or evaluation.
