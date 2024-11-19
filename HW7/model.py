@@ -53,11 +53,12 @@ def plot_clusters(data, labels, title, filename, features):
     pairs = random.sample([(features[i], features[j]) for i in range(len(features)) for j in range(i+1, len(features))], 6)
 
     fig, axes = plt.subplots(2, 3, figsize=(18, 12))
+    fig.suptitle(title, fontsize=16)
     axes = axes.flatten()
     for ax, (feature1, feature2) in zip(axes, pairs):
         sns.scatterplot(x=data[feature1], y=data[feature2], hue=labels, palette='viridis', ax=ax)
         ax.set_title(f"{feature1} vs {feature2}")
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
     plt.savefig(filename)
     plt.close()
 
