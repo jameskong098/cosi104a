@@ -25,11 +25,11 @@ def main():
     ]
 
     # Perform hierarchical clustering
-    hier_labels = hierarchical_clustering(portfolio_data, n_clusters=3)
+    hier_labels = hierarchical_clustering(portfolio_data, n_clusters=4)
     plot_clusters(portfolio_data, hier_labels, "Hierarchical Clustering", "hierarchical_clustering.png", features)
 
     # Perform K-means clustering
-    kmeans_labels = kmeans_clustering(portfolio_data, n_clusters=3)
+    kmeans_labels = kmeans_clustering(portfolio_data, n_clusters=4)
     plot_clusters(portfolio_data, kmeans_labels, "K-means Clustering", "kmeans_clustering.png", features)
 
 

@@ -19,6 +19,9 @@ This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, whi
 - `main.py`: Orchestrates the data loading, clustering analysis, and evaluation steps.
 - `HW7Portfolio25.csv`: Portfolio data file.
 - `USREC.csv`: NBER recession index data file.
+- `cluster_optimization/`: Contains images related to cluster optimization.
+- `hierarchical_clustering.png`: Image of the hierarchical clustering results.
+- `kmeans_clustering.png`: Image of the K-means clustering results.
 
 ## Functions
 
@@ -30,22 +33,41 @@ This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, whi
 
 - `hierarchical_clustering(data, n_clusters=3)`: Performs hierarchical clustering analysis.
 - `kmeans_clustering(data, n_clusters=3)`: Performs K-means clustering analysis.
-- `plot_clusters(data, labels, title)`: Plots the clustering results.
+- `plot_clusters(data, labels, title, filename, features)`: Plots the clustering results.
+- `determine_optimal_clusters(data, max_clusters=10, run=False)`: Determines the optimal number of clusters using the Elbow Method and Silhouette Score.
 
 ### `main.py`
 
 - `main()`: Orchestrates the data loading, clustering analysis, and evaluation steps.
 
+## Cluster Optimization
+
+To determine the optimal number of clusters, the Elbow Method and Silhouette Score are used. The results are saved as images in the `cluster_optimization` folder.
+
+- **Elbow Method**: The sum of squared distances for different numbers of clusters is plotted to identify the "elbow point," which indicates the optimal number of clusters.
+  ![Elbow Method](./cluster_optimization/elbow_method.png)
+
+- **Silhouette Scores**: The silhouette scores for different numbers of clusters are plotted to identify the number of clusters with the highest score.
+  ![Silhouette Scores](./cluster_optimization/silhouette_scores.png)
+
+Based on the Elbow Method and Silhouette Scores, 4 clusters were chosen as the optimal number. The "elbow point" in the Elbow Method plot and the highest average silhouette score both suggested that 4 clusters would provide a good balance between compactness and separation of the clusters.
+
+## Results
+
+The clustering results for hierarchical clustering and K-means clustering are saved as images. Each method picks out 6 random pairs of features to perform clustering on.
+
+- **Hierarchical Clustering**:
+  ![Hierarchical Clustering](./hierarchical_clustering.png)
+
+- **K-means Clustering**:
+  ![K-means Clustering](./kmeans_clustering.png)
+
+In both methods, 6 random pairs of features are selected from the 25 available features to visualize the clustering results. This helps in understanding how the clusters are formed based on different feature combinations.
+
 ## Tasks
 
-### (a) Perform hierarchical clustering analysis
+### (a)   [35 points] Perform hierarchical clustering analysis. Choose your settings and explain your choices.
 
-Hierarchical clustering is performed on the portfolio data with 3 clusters. This choice is based on the assumption that there may be three distinct groups of portfolios with similar return patterns.
+### (b)  [35 points] Perform K-mean clustering analysis. Choose your settings and explain your choices.
 
-### (b) Perform K-means clustering analysis
-
-K-means clustering is performed on the portfolio data with 3 clusters. This choice is consistent with the hierarchical clustering analysis to compare the results and identify any similarities or differences.
-
-### (c) Can the above clustering analysis results be used to predict the NBER recession index?
-
-The clustering analysis results can provide insights into the patterns and relationships within the portfolio data. However, using clustering results directly to predict the NBER recession index requires further analysis and validation. The clustering labels can be compared with the recession index to identify any correlations or patterns that may indicate a predictive relationship.
+### (c)   [30 points] Can the above clustering analysis results be used to predict the NBER recession index? Explain your answer.
