@@ -31,8 +31,8 @@ This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, whi
 
 ### `model.py`
 
-- `hierarchical_clustering(data, n_clusters=3)`: Performs hierarchical clustering analysis.
-- `kmeans_clustering(data, n_clusters=3)`: Performs K-means clustering analysis.
+- `hierarchical_clustering(data, n_clusters)`: Performs hierarchical clustering analysis.
+- `kmeans_clustering(data, n_clusters)`: Performs K-means clustering analysis.
 - `plot_clusters(data, labels, title, filename, features)`: Plots the clustering results.
 - `determine_optimal_clusters(data, max_clusters=10, run=False)`: Determines the optimal number of clusters using the Elbow Method and Silhouette Score.
 
@@ -54,15 +54,13 @@ Based on the Elbow Method and Silhouette Scores, 4 clusters were chosen as the o
 
 ## Results
 
-The clustering results for hierarchical clustering and K-means clustering are saved as images. Each method picks out 6 random pairs of features to perform clustering on.
+The clustering results for hierarchical clustering and K-means clustering are saved as images. In both methods, 6 random pairs of features are selected from the 25 available features to visualize the clustering results. This helps in understanding how the clusters are formed based on different feature combinations.
 
 - **Hierarchical Clustering**:
   ![Hierarchical Clustering](./hierarchical_clustering.png)
 
 - **K-means Clustering**:
   ![K-means Clustering](./kmeans_clustering.png)
-
-In both methods, 6 random pairs of features are selected from the 25 available features to visualize the clustering results. This helps in understanding how the clusters are formed based on different feature combinations.
 
 ## Tasks
 
