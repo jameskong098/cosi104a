@@ -9,7 +9,6 @@ This script serves as the main entry point for performing clustering analysis on
 """
 from data_loader import load_portfolio_data
 from model import hierarchical_clustering, kmeans_clustering, plot_clusters, determine_optimal_clusters
-import pandas as pd
 
 def main():
     # Load portfolio data
@@ -17,22 +16,22 @@ def main():
     portfolio_data = load_portfolio_data(portfolio_file)
 
     # Determine the optimal number of clusters
-    determine_optimal_clusters(portfolio_data)
+    determine_optimal_clusters(portfolio_data, run=False)
+
+    features = [
+        "SMALL LoBM", "ME1 BM2", "ME1 BM3", "ME1 BM4", "SMALL HiBM", "ME2 BM1", "ME2 BM2", "ME2 BM3",
+        "ME2 BM4", "ME2 BM5", "ME3 BM1", "ME3 BM2", "ME3 BM3", "ME3 BM4", "ME3 BM5", "ME4 BM1",
+        "ME4 BM2", "ME4 BM3", "ME4 BM4", "ME4 BM5", "BIG LoBM", "ME5 BM2", "ME5 BM3", "ME5 BM4", "BIG HiBM"
+    ]
 
     # Perform hierarchical clustering
-    hier_labels = hierarchical_clustering(portfolio_data)
-    plot_clusters(portfolio_data, hier_labels, "Hierarchical Clustering", "hierarchical_clustering.png")
+    hier_labels = hierarchical_clustering(portfolio_data, n_clusters=4)
+    plot_clusters(portfolio_data, hier_labels, "Hierarchical Clustering", "hierarchical_clustering.png", features)
 
     # Perform K-means clustering
-    kmeans_labels = kmeans_clustering(portfolio_data)
-    plot_clusters(portfolio_data, kmeans_labels, "K-means Clustering", "kmeans_clustering.png")
+    kmeans_labels = kmeans_clustering(portfolio_data, n_clusters=4)
+    plot_clusters(portfolio_data, kmeans_labels, "K-means Clustering", "kmeans_clustering.png", features)
 
-    # Load recession data
-    recession_file = "USREC.csv"
-    recession_data = pd.read_csv(recession_file, index_col=0)
-
-    # Evaluate if clustering results can predict recession
-    # This part requires further analysis and explanation
 
 if __name__ == '__main__':
     main()

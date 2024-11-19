@@ -4,8 +4,9 @@ from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import silhouette_score
 import matplotlib.pyplot as plt
 import seaborn as sns
+import random
 
-def hierarchical_clustering(data, n_clusters=4):
+def hierarchical_clustering(data, n_clusters):
     """
     Perform hierarchical clustering analysis.
 
@@ -21,7 +22,7 @@ def hierarchical_clustering(data, n_clusters=4):
     labels = model.fit_predict(data)
     return labels
 
-def kmeans_clustering(data, n_clusters=4):
+def kmeans_clustering(data, n_clusters):
     """
     Perform K-means clustering analysis.
 
@@ -37,7 +38,7 @@ def kmeans_clustering(data, n_clusters=4):
     labels = model.fit_predict(data)
     return labels
 
-def plot_clusters(data, labels, title, filename):
+def plot_clusters(data, labels, title, filename, features):
     """
     Plot the clustering results and save as a PNG file.
 
@@ -46,14 +47,21 @@ def plot_clusters(data, labels, title, filename):
     - labels (ndarray): Cluster labels for each data point.
     - title (str): The title of the plot.
     - filename (str): The filename to save the plot as.
+    - features (list): List of feature names to plot. If None, plot the first two features.
     """
-    plt.figure(figsize=(10, 7))
-    sns.scatterplot(x=data.iloc[:, 0], y=data.iloc[:, 1], hue=labels, palette='viridis')
-    plt.title(title)
+    random.seed(42)
+    pairs = random.sample([(features[i], features[j]) for i in range(len(features)) for j in range(i+1, len(features))], 6)
+
+    fig, axes = plt.subplots(2, 3, figsize=(18, 12))
+    axes = axes.flatten()
+    for ax, (feature1, feature2) in zip(axes, pairs):
+        sns.scatterplot(x=data[feature1], y=data[feature2], hue=labels, palette='viridis', ax=ax)
+        ax.set_title(f"{feature1} vs {feature2}")
+    plt.tight_layout()
     plt.savefig(filename)
     plt.close()
 
-def determine_optimal_clusters(data, max_clusters=10):
+def determine_optimal_clusters(data, max_clusters=10, run=False):
     """
     Determine the optimal number of clusters using the Elbow Method and Silhouette Score.
 
@@ -64,6 +72,8 @@ def determine_optimal_clusters(data, max_clusters=10):
     Returns:
     - None
     """
+    if not run:
+        return
     print("\nDetermining the optimal number of clusters...")
     sse = []
     silhouette_scores = []
