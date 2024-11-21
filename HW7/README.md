@@ -40,6 +40,27 @@ This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, whi
 
 - `main()`: Orchestrates the data loading, clustering analysis, and evaluation steps.
 
+## Required Libraries
+
+The following libraries are required to run the project:
+
+- `pandas`
+- `scikit-learn`
+- `matplotlib`
+- `seaborn`
+
+### Installation with `pip`
+
+```sh
+pip install pandas scikit-learn matplotlib seaborn
+```
+
+### Installation with `conda`
+
+```sh
+conda install pandas scikit-learn matplotlib seaborn
+```
+
 ## Data Preprocessing
 
 Before performing clustering analysis, it is essential to ensure that the lengths of the portfolio data and the NBER recession index data match. This is necessary because the clustering results will be compared with the NBER recession index using Normalized Mutual Information (NMI). If the lengths of the datasets do not match, it would lead to misalignment and incorrect evaluation.
@@ -61,7 +82,7 @@ nber_labels = nber_data.iloc[:min_length].values.ravel()
 
 By ensuring the lengths of the datasets match, we can accurately compare the clustering results with the NBER recession index.
 
-##  Clustering Settings
+## Clustering Settings
 ### Hierarchical Clustering
 In `model.py`, hierarchical clustering is performed using the `AgglomerativeClustering` class from `sklearn.cluster` with the following settings:
 
