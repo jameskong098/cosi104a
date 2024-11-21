@@ -15,7 +15,7 @@ This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, whi
 ## Files
 
 - `data_loader.py`: Contains functions to load portfolio data from CSV files.
-- `model.py`: Contains functions to perform hierarchical and K-means clustering analysis, and to plot clustering results.
+- `model.py`: Contains functions to perform hierarchical and K-means clustering analysis, determine the optimal number of clusters, and plot clustering results.
 - `main.py`: Orchestrates the data loading, clustering analysis, and evaluation steps.
 - `HW7Portfolio25.csv`: Portfolio data file.
 - `USREC.csv`: NBER recession index data file.
@@ -32,7 +32,7 @@ This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, whi
 ### `model.py`
 
 - `hierarchical_clustering(data, n_clusters)`: Performs hierarchical clustering analysis.
-- `kmeans_clustering(data, n_clusters)`: Performs K-means clustering analysis.
+- `kmeans_clustering(data, n_clusters, random_state, n_init)`: Performs K-means clustering analysis.
 - `plot_clusters(data, labels, title, filename, features)`: Plots the clustering results.
 - `determine_optimal_clusters(data, max_clusters=10, run=False)`: Determines the optimal number of clusters using the Elbow Method and Silhouette Score.
 
@@ -61,7 +61,20 @@ nber_labels = nber_data.iloc[:min_length].values.ravel()
 
 By ensuring the lengths of the datasets match, we can accurately compare the clustering results with the NBER recession index.
 
-## Cluster Optimization
+##  Clustering Settings
+### Hierarchical Clustering
+In `model.py`, hierarchical clustering is performed using the `AgglomerativeClustering` class from `sklearn.cluster` with the following settings:
+
+`n_clusters=3`: The number of clusters to form.
+
+### K-means Clustering
+In `model.py`, K-means clustering is performed using the `KMeans` class from `sklearn.cluster` with the following settings:
+
+`n_clusters=4`: The number of clusters to form.
+`random_state=42`: The seed used by the random number generator.
+`n_init='auto'`: The number of time the k-means algorithm will be run with different centroid seeds.
+
+### Cluster Optimization
 
 To determine the optimal number of clusters, the Elbow Method and Silhouette Score are used. The results are saved as images in the `cluster_optimization` folder.
 
@@ -83,10 +96,25 @@ The clustering results for hierarchical clustering and K-means clustering are sa
 - **K-means Clustering**:
   ![K-means Clustering](./kmeans_clustering.png)
 
-## Evaluation
+### Evaluation
 
 The clustering results are compared with the NBER recession index using `Normalized Mutual Information (NMI)` to evaluate the potential of using clustering results to predict the NBER recession index. 
 
+```python
+# Perform hierarchical clustering
+hier_labels = hierarchical_clustering(portfolio_data, n_clusters=3)
+plot_clusters(portfolio_data, hier_labels, "Hierarchical Clustering", "hierarchical_clustering.png", features)
+
+# Perform K-means clustering
+kmeans_labels = kmeans_clustering(portfolio_data, n_clusters=4, random_state=42, n_init="auto")
+plot_clusters(portfolio_data, kmeans_labels, "K-means Clustering", "kmeans_clustering.png", features)
+
+# Compare clustering results with NBER recession index using NMI
+nmi_hierarchical = normalized_mutual_info_score(nber_labels, hier_labels)
+nmi_kmeans = normalized_mutual_info_score(nber_labels, kmeans_labels)
+```
+
+**Console Output**: 
 ```
 NMI for Hierarchical Clustering: 0.007573755702308798
 NMI for K-means Clustering: 0.014697987950581394

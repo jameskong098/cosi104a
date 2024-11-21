@@ -22,7 +22,7 @@ def hierarchical_clustering(data, n_clusters):
     labels = model.fit_predict(data)
     return labels
 
-def kmeans_clustering(data, n_clusters):
+def kmeans_clustering(data, n_clusters, random_state, n_init):
     """
     Perform K-means clustering analysis.
 
@@ -33,7 +33,7 @@ def kmeans_clustering(data, n_clusters):
     Returns:
     - labels (ndarray): Cluster labels for each data point.
     """
-    model = KMeans(n_init='auto', n_clusters=n_clusters, random_state=42)
+    model = KMeans(n_clusters=n_clusters, random_state=random_state, n_init=n_init)
     print(f"\nRunning K-means clustering with {n_clusters} clusters...\n")
     labels = model.fit_predict(data)
     return labels

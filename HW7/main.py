@@ -39,7 +39,7 @@ def main():
     plot_clusters(portfolio_data, hier_labels, "Hierarchical Clustering", "hierarchical_clustering.png", features)
 
     # Perform K-means clustering
-    kmeans_labels = kmeans_clustering(portfolio_data, n_clusters=4)
+    kmeans_labels = kmeans_clustering(portfolio_data, n_clusters=4, random_state=42, n_init="auto")
     plot_clusters(portfolio_data, kmeans_labels, "K-means Clustering", "kmeans_clustering.png", features)
 
     # Compare clustering results with NBER recession index using NMI
