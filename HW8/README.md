@@ -10,7 +10,7 @@ James Kong
 
 ## Overview
 
-This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, which contains the daily returns of 25 portfolios over 25438 trading days. Additionally, it evaluates the potential of using clustering results to predict the NBER recession index from the dataset `USREC.csv`.
+This project performs clustering analysis using PCA on a dataset `HW7Portfolio25.csv`, which contains the daily returns of 25 portfolios over 25438 trading days. Additionally, it evaluates the potential of using clustering results to predict the NBER recession index from the dataset `USREC.csv`.
 
 ## Files
 
@@ -20,8 +20,7 @@ This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, whi
 - `HW7Portfolio25.csv`: Portfolio data file.
 - `USREC.csv`: NBER recession index data file.
 - `cluster_optimization/`: Contains images related to cluster optimization.
-- `hierarchical_clustering.png`: Image of the hierarchical clustering results.
-- `kmeans_clustering.png`: Image of the K-means clustering results.
+- `cumulative_explained_variance.png`: Image showing the cumulative explained variance by the number of principal components.
 
 ## Functions
 
@@ -33,8 +32,7 @@ This project performs clustering analysis on a dataset `HW7Portfolio25.csv`, whi
 
 - `hierarchical_clustering(data, n_clusters)`: Performs hierarchical clustering analysis.
 - `kmeans_clustering(data, n_clusters, random_state, n_init)`: Performs K-means clustering analysis.
-- `plot_clusters(data, labels, title, filename, features)`: Plots the clustering results.
-- `determine_optimal_clusters(data, max_clusters=10, run=False)`: Determines the optimal number of clusters using the Elbow Method and Silhouette Score.
+- `determine_optimal_clusters(data, max_clusters=10, run=False)`: Determines the optimal number of clusters using the Elbow Method and Silhouette Score by generating a plot to visualize
 
 ### `main.py`
 
@@ -81,18 +79,24 @@ nber_labels = nber_data.iloc[:min_length].values.ravel()
 
 By ensuring the lengths of the datasets match, we can accurately compare the clustering results with the NBER recession index.
 
+### Determining the Optimal Number of Principal Components
+
+To determine the optimal number of principal components, we plotted the cumulative explained variance for different numbers of components. The graph `cumulative_explained_variance.png` shows that the cumulative variance stops growing fast after 4 components, indicating that 4 is the optimal number of principal components to retain most of the variance in the data.
+
+![Cumulative Explained Variance](./cumulative_explained_variance.png)
+
 ### Applying PCA
 
-To reduce the dimensionality of the portfolio data, we applied Principal Component Analysis (PCA). We chose to keep 5 principal components, which explained a significant portion of the variance in the data. The following steps are performed in `main.py` to apply PCA:
+To reduce the dimensionality of the portfolio data, we applied Principal Component Analysis (PCA). We chose to keep 4 principal components, which explained a significant portion of the variance in the data. The following steps are performed in `main.py` to apply PCA:
 
 ```python
 # Apply PCA
-n_components = 5  # Choose the number of principal components
+n_components = 4  # Choose the number of principal components
 pca_data, explained_variance_ratio = apply_pca(portfolio_data, n_components)
 print(f"Explained variance ratio by each component: {explained_variance_ratio}")
 ```
 
-`n_components = 5`: This line sets the number of principal components to keep.
+`n_components = 4`: This line sets the number of principal components to keep.
 
 `pca_data, explained_variance_ratio = apply_pca(portfolio_data, n_components)`: This line applies PCA to the portfolio data and returns the transformed data and the explained variance ratio for each component.
 
@@ -101,12 +105,15 @@ print(f"Explained variance ratio by each component: {explained_variance_ratio}")
 By applying PCA, we reduce the dimensionality of the data while retaining most of the variance, making the clustering analysis more efficient and effective.
 
 ## Clustering Settings
+
 ### Hierarchical Clustering
+
 In `model.py`, hierarchical clustering is performed using the `AgglomerativeClustering` class from `sklearn.cluster` with the following settings:
 
 `n_clusters=3`: The number of clusters to form.
 
 ### K-means Clustering
+
 In `model.py`, K-means clustering is performed using the `KMeans` class from `sklearn.cluster` with the following settings:
 
 `n_clusters=4`: The number of clusters to form.
@@ -141,12 +148,13 @@ nmi_hierarchical = normalized_mutual_info_score(nber_labels, hier_labels)
 nmi_kmeans = normalized_mutual_info_score(nber_labels, kmeans_labels)
 ```
 
+
 ### **Scores**: 
 
 With PCA `(HW8)`: 
 ```
-NMI for Hierarchical Clustering: 0.01139046788849987
-NMI for K-means Clustering: 0.015025565571267835
+NMI for Hierarchical Clustering: 0.008337301700429706
+NMI for K-means Clustering: 0.013882494662056762
 ```
 
 Before PCA `(HW7)`:
@@ -159,11 +167,6 @@ The range for `Normalized Mutual Information (NMI)` is from 0 to 1.
 An NMI score of 0 indicates no mutual information between the clusters and the true labels, meaning the clustering results are completely independent of the true labels.
 An NMI score of 1 indicates perfect correlation, meaning the clustering results perfectly match the true labels.
 
-Based on these NMI scores, the clustering analysis results have a very low correlation with the NBER recession index. Therefore, the clustering analysis results cannot be used to predict the NBER recession index effectively.
-
 ## Predicting NBER Recession Index
-
-An NMI score of 0 indicates no mutual information between the clusters and the true labels, meaning the clustering results are completely independent of the true labels.
-An NMI score of 1 indicates perfect correlation, meaning the clustering results perfectly match the true labels.
 
 Based on these NMI scores, the clustering analysis results have a very low correlation with the NBER recession index. Therefore, the clustering analysis results cannot be used to predict the NBER recession index effectively.

@@ -54,20 +54,30 @@ def apply_pca(data, n_components):
     explained_variance_ratio = pca.explained_variance_ratio_
     return pca_data, explained_variance_ratio
 
-def calculate_cumulative_explained_variance(data):
+def calculate_cumulative_explained_variance(data, max_components=10, run=False):
     """
-    Calculate the cumulative explained variance for the given data.
+    Calculate and plot the cumulative explained variance for the given data.
 
     Parameters:
     - data (DataFrame): The data to analyze.
-
-    Returns:
-    - cumulative_explained_variance (ndarray): The cumulative explained variance for each principal component.
+    - max_components (int): The maximum number of principal components to consider.
     """
-    pca = PCA()
+    if not run:
+        return
+    
+    pca = PCA(n_components=max_components)
     pca.fit(data)
     cumulative_explained_variance = pca.explained_variance_ratio_.cumsum()
-    return cumulative_explained_variance
+
+    # Plot the cumulative explained variance
+    plt.figure(figsize=(10, 7))
+    plt.plot(range(1, max_components + 1), cumulative_explained_variance, marker='o')
+    plt.title('Cumulative Explained Variance by Number of Principal Components')
+    plt.xlabel('Number of Principal Components')
+    plt.ylabel('Cumulative Explained Variance')
+    plt.grid(True)
+    plt.savefig('cumulative_explained_variance.png')
+    plt.close()
 
 def determine_optimal_clusters(data, max_clusters=10, run=False):
     """
