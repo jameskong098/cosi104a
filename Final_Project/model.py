@@ -16,6 +16,31 @@ from sklearn.model_selection import cross_val_score, GridSearchCV
 import os
 import json
 
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+
+def select_best_algorithm(X_train, y_train, run=False):
+    algorithms = {
+        'RandomForest': RandomForestClassifier(random_state=42),
+        'SVM': SVC(random_state=42),
+        'KNN': KNeighborsClassifier()
+    }
+
+    best_score = 0
+    best_algorithm = None
+
+    for name, algorithm in algorithms.items():
+        scores = cross_val_score(algorithm, X_train, y_train, cv=5, scoring='f1_weighted')
+        mean_score = scores.mean()
+        print(f'{name} F1 Score: {mean_score}')
+
+        if mean_score > best_score:
+            best_score = mean_score
+            best_algorithm = algorithm
+
+    print(f'Best Algorithm: {best_algorithm.__class__.__name__} with F1 Score: {best_score}')
+    return best_algorithm
+
 def train_and_evaluate_model(X_train, y_train, feature_names):
     """
     Train a RandomForestClassifier with cross-validation and evaluate using F1 score.
