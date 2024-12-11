@@ -24,4 +24,6 @@ def load_data(train_file, test_file):
     y_train = train_data['sii']
     X_test = test_data.drop(columns=['id'])
 
-    return X_train, y_train, X_test
+    test_ids = test_data['id']
+
+    return X_train, y_train, X_test, test_ids

@@ -10,6 +10,7 @@ It loads the training and test data, preprocesses them, trains a model using cro
 and predicts fraudulent transactions within the test data, saving the results to a CSV file.
 """
 
+import pandas as pd
 from data_loader import load_data
 from preprocessor import preprocess_data
 from model import select_best_algorithm, train_and_evaluate_model, make_predictions
@@ -18,7 +19,7 @@ from timer import start_timer, get_time_passed
 def main():
     start_time = start_timer()
 
-    X_train, y_train, X_test = load_data('train.csv', 'test.csv')
+    X_train, y_train, X_test, test_ids = load_data('train.csv', 'test.csv')
 
     X_train, X_test, feature_names = preprocess_data(X_train, X_test)
 
@@ -26,7 +27,7 @@ def main():
     
     model = train_and_evaluate_model(X_train, y_train, feature_names)
 
-    make_predictions(model, X_test, 'sample_submission.csv')
+    make_predictions(model, X_test, 'submission.csv', test_ids)
 
     get_time_passed(start_time)
 

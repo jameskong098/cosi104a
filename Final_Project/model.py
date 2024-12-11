@@ -115,7 +115,7 @@ def train_and_evaluate_model(X_train, y_train, feature_names):
     model.fit(X_train, y_train)
     return model
 
-def make_predictions(model, X_test, output_file):
+def make_predictions(model, X_test, output_file, test_ids):
     """
     Makes predictions on the test data and saves the results to a CSV file.
 
@@ -123,11 +123,21 @@ def make_predictions(model, X_test, output_file):
     - model (RandomForestClassifier): Trained model.
     - X_test (ndarray): Preprocessed features of the test data.
     - output_file (str): Path to the output CSV file.
+    - test_ids (Series): IDs of the test data.
 
     Returns:
     - None
     """
     predictions = model.predict(X_test)
-    output_df = pd.DataFrame({'sii': predictions})
-    output_df.to_csv(output_file, index=False)
+    # Assuming you have a DataFrame `submission_df` with the predictions
+    submission_df = pd.DataFrame({
+        'id': test_ids,  # Replace with your test IDs
+        'sii': predictions  # Replace with your predictions
+    })
+
+    # Convert the 'sii' column to integers
+    submission_df['sii'] = submission_df['sii'].astype(int)
+
+    # Save the DataFrame to a CSV file
+    submission_df.to_csv('submission.csv', index=False)
     
