@@ -12,39 +12,12 @@ Functions:
 
 import pandas as pd
 from sklearn.metrics import make_scorer, cohen_kappa_score
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score, GridSearchCV
-import os
-import json
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
+from sklearn.model_selection import cross_val_score
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
 from pytorch_tabnet.tab_model import TabNetClassifier
 import torch
-
-def select_best_algorithm(X_train, y_train, run=False):
-    algorithms = {
-        'RandomForest': RandomForestClassifier(random_state=42),
-        'SVM': SVC(random_state=42),
-        'KNN': KNeighborsClassifier()
-    }
-
-    best_score = 0
-    best_algorithm = None
-
-    for name, algorithm in algorithms.items():
-        scores = cross_val_score(algorithm, X_train, y_train, cv=5, scoring='f1_weighted')
-        mean_score = scores.mean()
-        print(f'{name} F1 Score: {mean_score}')
-
-        if mean_score > best_score:
-            best_score = mean_score
-            best_algorithm = algorithm
-
-    print(f'Best Algorithm: {best_algorithm.__class__.__name__} with F1 Score: {best_score}')
-    return best_algorithm
 
 def train_and_evaluate_model(X_train, y_train, feature_names):
     """
@@ -133,4 +106,5 @@ def make_predictions(models, X_test, output_file, test_ids):
     })
 
     submission_df.to_csv(output_file, index=False)
-    print(f"Predictions saved to {output_file}")
+    print(f"\nPredictions saved to {output_file}")
+    

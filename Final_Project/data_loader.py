@@ -47,12 +47,6 @@ def load_data(train_file, test_file, train_parquet_dir, test_parquet_dir):
     # Drop rows with missing target values
     train_data = train_data.dropna(subset=['sii'])
 
-    # Extract features and target variable
-    X_train = train_data.drop(columns=['id', 'sii'])
-    y_train = train_data['sii']
-    X_test = test_data.drop(columns=['id'])
-    test_ids = test_data['id']
-
     # Load parquet files and merge with CSV data
     train_parquet_data = loadTimeSeriesData(train_parquet_dir)
     test_parquet_data = loadTimeSeriesData(test_parquet_dir)
