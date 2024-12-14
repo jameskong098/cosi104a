@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 matplotlib.use('Agg') 
 
 # Data
-rounds = [1, 2, 3, 4]
-scores = [0, 0, 0, 0]
+rounds = [1, 2, 3, 4, 5]
+scores = [0, 0, 0.189, 0.29, 0.32]
 
 # Create the plot
 plt.figure(figsize=(10, 5))
