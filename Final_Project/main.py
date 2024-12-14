@@ -1,3 +1,4 @@
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import cohen_kappa_score
 from data_loader import load_data, prepare_test_data
 from pre_processor import preprocess_data
@@ -8,14 +9,8 @@ def main():
     train_data, test_data, sample_submission = load_data()
     X, y, common_columns, scaler, pca = preprocess_data(train_data, test_data)
 
-    # Split the data
-    from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.1, stratify=y, random_state=42
-    )
-
-    print(f"Training set distribution:\n{y_train.value_counts(normalize=True)}")
-    print(f"Test set distribution:\n{y_test.value_counts(normalize=True)}")
+    # Split the data    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, stratify=y, random_state=42)
 
     # Train the model
     voting_classifier = train_model(X_train, y_train)
@@ -34,8 +29,7 @@ def main():
     submission = sample_submission.copy()
     submission['sii'] = ensemble_preds
     submission.to_csv('submission.csv', index=False)
-    print(submission.head())
+    print(submission)
 
-    
 if __name__ == "__main__":
     main()
