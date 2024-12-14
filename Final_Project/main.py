@@ -1,7 +1,11 @@
 """
-main.py
+Author: James Kong
+Course: COSI 104A - Introduction to Machine Learning
+Assignment: Final Project
+Date: 12/13/2024
 
-This script loads, preprocesses data, trains a model, evaluates it, and prepares a submission file.
+Description:
+This script serves as the main entry point for performing ensemble learning on a Kaggle competition dataset.
 """
 
 from sklearn.model_selection import train_test_split
@@ -20,7 +24,7 @@ def main():
     5. Prepare and save predictions for test data
     """
     # Load and preprocess the data
-    train_data, test_data, sample_submission = load_data()
+    train_data, test_data, sample_submission = load_data('train.csv', 'test.csv', 'sample_submission.csv', 'series_train.parquet', 'series_test.parquet')
     X, y, common_columns, scaler, pca = preprocess_data(train_data, test_data)
 
     # Split the data for training and testing
@@ -43,6 +47,7 @@ def main():
     submission = sample_submission.copy()
     submission['sii'] = ensemble_preds
     submission.to_csv('submission.csv', index=False)
+    print("\nSubmission file saved successfully.\n")
     print(submission)
 
 if __name__ == "__main__":

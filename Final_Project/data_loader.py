@@ -44,7 +44,7 @@ def loadTimeSeriesData(directory):
     data["id"] = ids  
     return data
 
-def load_data():
+def load_data(train_dir, test_dir, sample_dir, train_parquet_dir, test_parquet_dir):
     """
     Load and merge training and test data from CSV and parquet files.
 
@@ -52,16 +52,16 @@ def load_data():
     tuple: Training data, test data, and sample submission DataFrame
     """
     # Load CSV files
-    train_data = pd.read_csv('train.csv')
-    test_data = pd.read_csv('test.csv')
-    sample_submission = pd.read_csv('sample_submission.csv')
+    train_data = pd.read_csv(train_dir)
+    test_data = pd.read_csv(test_dir)
+    sample_submission = pd.read_csv(sample_dir)
     
     # Drop rows where 'sii' is missing
     train_data = train_data.dropna(subset=['sii'])
 
     # Load parquet files
-    train_parquet_data = loadTimeSeriesData("series_train.parquet")
-    test_parquet_data = loadTimeSeriesData('series_test.parquet')
+    train_parquet_data = loadTimeSeriesData(train_parquet_dir)
+    test_parquet_data = loadTimeSeriesData(test_parquet_dir)
 
     # Merge CSV and parquet data
     train_data = pd.merge(train_data, train_parquet_data, how="left", on='id')
