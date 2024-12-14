@@ -1,43 +1,40 @@
-"""
-Author: James Kong
-Course: COSI 104A - Introduction to Machine Learning
-Assignment: Final Project
-Date: 12/13/2024
-
-Description:
-This script orchestrates the data loading, preprocessing, model training, and prediction steps.
-It loads the training and test data, preprocesses them, trains a model using cross-validation,
-and predicts fraudulent transactions within the test data, saving the results to a CSV file.
-"""
-
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import cohen_kappa_score
-from data_loader import load_data
-from preprocessor import preprocess_data
-from model import train_and_evaluate_model, make_predictions
-from timer import start_timer, get_time_passed
+from data_loader import load_data, prepare_test_data
+from pre_processor import preprocess_data
+from model import train_model, quadratic_weighted_kappa
 
 def main():
-    start_time = start_timer()
+    # Load and preprocess the data
+    train_data, test_data, sample_submission = load_data()
+    X, y, common_columns, scaler, pca = preprocess_data(train_data, test_data)
 
-    X_train, y_train, X_test, test_ids = load_data('train.csv', 'test.csv', 'series_train.parquet', 'series_test.parquet')
+    # Split the data
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.1, stratify=y, random_state=42
+    )
 
-    X_train, X_test, feature_names = preprocess_data(X_train, X_test)
+    print(f"Training set distribution:\n{y_train.value_counts(normalize=True)}")
+    print(f"Test set distribution:\n{y_test.value_counts(normalize=True)}")
 
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+    # Train the model
+    voting_classifier = train_model(X_train, y_train)
+
+    # Evaluate the model
+    ensemble_preds = voting_classifier.predict(X_test)
+    qwk_score = quadratic_weighted_kappa(y_test.tolist(), ensemble_preds, num_ratings=4)
+    print(f"Quadratic Weighted Kappa Score: {qwk_score:.4f}")
+
+    # Prepare and save predictions for test data
+    X_test_data = prepare_test_data(test_data, common_columns)
+    X_test_scaled = scaler.transform(X_test_data)
+    X_test_pca = pca.transform(X_test_scaled)
+
+    ensemble_preds = voting_classifier.predict(X_test_pca)
+    submission = sample_submission.copy()
+    submission['sii'] = ensemble_preds
+    submission.to_csv('submission.csv', index=False)
+    print(submission.head())
+
     
-    best_model, models = train_and_evaluate_model(X_train, y_train, feature_names)
-
-    val_predictions = best_model.predict(X_val)
-
-    kappa = cohen_kappa_score(y_val, val_predictions, weights='quadratic')
-  
-    print(f"Validation Quadratic Weighted Kappa: {kappa}")
-
-    make_predictions(models, X_test, 'submission.csv', test_ids)
-
-    get_time_passed(start_time)
-
 if __name__ == "__main__":
     main()
-    

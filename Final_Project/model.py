@@ -1,110 +1,46 @@
-"""
-model.py
-
-This module contains functions to train and evaluate a machine learning model.
-It includes functions to train the model using cross-validation and to make predictions.
-
-Functions:
-- select_best_algorithm(X_train, y_train, run=False): Selects the best algorithm based on cross-validation.
-- train_and_evaluate_model(X_train, y_train, feature_names): Trains and evaluates the model.
-- make_predictions(model, X_test, output_file, test_ids): Makes predictions on the test data and saves the results.
-"""
-
-import pandas as pd
-from sklearn.metrics import make_scorer, cohen_kappa_score
-from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import VotingClassifier, RandomForestClassifier
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
-from catboost import CatBoostClassifier
-from pytorch_tabnet.tab_model import TabNetClassifier
-import torch
+import numpy as np
 
-def train_and_evaluate_model(X_train, y_train, feature_names):
-    """
-    Train multiple models using cross-validation and evaluate using F1 score and Kappa score.
-    Save the highest validation F1 score to highest_f1_score.txt and update it if the latest score is higher.
+def train_model(X_train, y_train):
+    rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    xgb_model = XGBClassifier(n_estimators=100, learning_rate=0.1, random_state=42)
+    lgbm_model = LGBMClassifier(n_estimators=100, learning_rate=0.1, random_state=42)
 
-    Parameters:
-    - X_train (ndarray): Preprocessed features of the training data.
-    - y_train (Series): Labels of the training data.
-    - feature_names (list): List of feature names.
+    voting_classifier = VotingClassifier(
+        estimators=[
+            ('rf', rf_model),
+            ('xgb', xgb_model),
+            ('lgbm', lgbm_model)
+        ]
+    )
 
-    Returns:
-    - model (dict): Dictionary of trained models.
-    """
-    print(f"\nTraining model with {X_train.shape[0]} samples and {X_train.shape[1]} features...\n")
-    print(f"Features: {feature_names}")
+    voting_classifier.fit(X_train, y_train)
+    return voting_classifier
 
-    models = {
-        'XGBoost': XGBClassifier(random_state=42, objective='multi:softmax', num_class=4),
-        'LightGBM': LGBMClassifier(random_state=42, objective='multiclass', num_class=4),
-        'TabNet': TabNetClassifier(
-            n_d=64, n_a=64, n_steps=5,
-            optimizer_fn=torch.optim.Adam,
-            optimizer_params=dict(lr=2e-2),
-            scheduler_params={"step_size":10, "gamma":0.9},
-            scheduler_fn=torch.optim.lr_scheduler.StepLR,
-            mask_type='sparsemax',
-            verbose=0
-        ),
-        'CatBoost': CatBoostClassifier(random_state=42, verbose=0, loss_function='MultiClass')
-    }
+def quadratic_weighted_kappa(y_true, y_pred, num_ratings=None):
+    y_true = np.array(y_true, dtype=int)
+    y_pred = np.array(y_pred, dtype=int)
 
-    best_score = 0
-    best_model = None
+    if num_ratings is None:
+        num_ratings = max(max(y_true), max(y_pred)) + 1
 
-    kappa_scorer = make_scorer(cohen_kappa_score)
+    O = np.zeros((num_ratings, num_ratings))
+    for a, p in zip(y_true, y_pred):
+        O[a, p] += 1
 
-    for name, model in models.items():
-        print(f"\nTraining {name}...")
-        if name == 'TabNet':
-            model.fit(X_train, y_train, patience=30, max_epochs=1000, eval_metric=['logloss'])
-        else:
-            model.fit(X_train, y_train)
-        
-        scores = cross_val_score(model, X_train, y_train, cv=5, scoring=kappa_scorer)
-        mean_kappa_score = scores.mean()
-        print(f'{name} Cross-Validation Cohen Kappa Score: {mean_kappa_score}')
+    actual_hist = np.sum(O, axis=1)
+    predicted_hist = np.sum(O, axis=0)
+    E = np.outer(actual_hist, predicted_hist) / np.sum(O)
 
-        if mean_kappa_score > best_score:
-            best_score = mean_kappa_score
-            best_model = model
+    W = np.zeros((num_ratings, num_ratings))
+    for i in range(num_ratings):
+        for j in range(num_ratings):
+            W[i, j] = ((i - j) ** 2) / ((num_ratings - 1) ** 2)
 
-    print(f'\nBest Model: {best_model.__class__.__name__} with Cohen Kappa Score: {best_score}\n')
+    numerator = np.sum(W * O)
+    denominator = np.sum(W * E)
+    kappa = 1 - numerator / denominator
 
-    return best_model, models
-
-def make_predictions(models, X_test, output_file, test_ids):
-    """
-    Makes predictions on the test data using ensemble learning and saves the results to a CSV file.
-
-    Parameters:
-    - models (dict): Dictionary of trained models.
-    - X_test (ndarray): Preprocessed features of the test data.
-    - output_file (str): Path to the output CSV file.
-    - test_ids (Series): IDs of the test data.
-
-    Returns:
-    - None
-    """
-    predictions = []
-    for name, model in models.items():
-        print(f"Making predictions with {name}...")
-        if name == 'TabNet':
-            preds = model.predict(X_test)
-        else:
-            preds = model.predict(X_test)
-        predictions.append(preds)
-
-    # Ensemble predictions by averaging
-    final_predictions = sum(predictions) / len(predictions)
-    final_predictions = final_predictions.argmax(axis=1)  # Get the class with the highest probability
-
-    submission_df = pd.DataFrame({
-        'id': test_ids,
-        'sii': final_predictions
-    })
-
-    submission_df.to_csv(output_file, index=False)
-    print(f"\nPredictions saved to {output_file}")
-    
+    return kappa
