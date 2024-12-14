@@ -9,20 +9,20 @@ def loadParquetFile(directory, fileName):
     """
     path = os.path.join(directory, fileName, "part-0.parquet")
     df = pd.read_parquet(path)
-    df.drop("step", axis=1, inplace=True)  # drop step column
+    df.drop("step", axis=1, inplace=True)  
     statDF = df.describe().values.reshape(-1)
-    return statDF, fileName.split("=")[1]  # get ids
+    return statDF, fileName.split("=")[1]  
 
 def loadTimeSeriesData(directory):
     """
     Load time series data from parquet files.
     """
-    filesIds = os.listdir(directory)  # get list of folder names (file ids)
+    filesIds = os.listdir(directory) 
     with ThreadPoolExecutor() as executor:
         results = list(tqdm(executor.map(lambda fname: loadParquetFile(directory, fname), filesIds), total=len(filesIds)))
-    statistic, ids = zip(*results)  # pack into Statistic and Ids
+    statistic, ids = zip(*results)  
     data = pd.DataFrame(statistic, columns=[f"stat_{i}" for i in range(len(statistic[0]))])
-    data["id"] = ids  # add ids into dataframe
+    data["id"] = ids  
     return data
 
 def load_data():
@@ -30,10 +30,8 @@ def load_data():
     test_data = pd.read_csv('test.csv')
     sample_submission = pd.read_csv('sample_submission.csv')
     
-    # Drop rows with missing target values
     train_data = train_data.dropna(subset=['sii'])
 
-    # Load parquet files and merge with CSV data
     train_parquet_data = loadTimeSeriesData("series_train.parquet")
     test_parquet_data = loadTimeSeriesData('series_test.parquet')
 

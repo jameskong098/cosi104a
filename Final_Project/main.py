@@ -1,3 +1,4 @@
+from sklearn.metrics import cohen_kappa_score
 from data_loader import load_data, prepare_test_data
 from pre_processor import preprocess_data
 from model import train_model, quadratic_weighted_kappa
@@ -21,7 +22,7 @@ def main():
 
     # Evaluate the model
     ensemble_preds = voting_classifier.predict(X_test)
-    qwk_score = quadratic_weighted_kappa(y_test.tolist(), ensemble_preds, num_ratings=4)
+    qwk_score = cohen_kappa_score(y_test, ensemble_preds, weights='quadratic')
     print(f"Quadratic Weighted Kappa Score: {qwk_score:.4f}")
 
     # Prepare and save predictions for test data
