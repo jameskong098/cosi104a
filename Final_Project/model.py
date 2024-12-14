@@ -91,14 +91,14 @@ def make_predictions(models, X_test, output_file, test_ids):
     for name, model in models.items():
         print(f"Making predictions with {name}...")
         if name == 'TabNet':
-            preds = model.predict(X_test).flatten()
+            preds = model.predict(X_test)
         else:
-            preds = model.predict(X_test).flatten()
+            preds = model.predict(X_test)
         predictions.append(preds)
 
     # Ensemble predictions by averaging
     final_predictions = sum(predictions) / len(predictions)
-    final_predictions = final_predictions.round().astype(int)
+    final_predictions = final_predictions.argmax(axis=1)  # Get the class with the highest probability
 
     submission_df = pd.DataFrame({
         'id': test_ids,
