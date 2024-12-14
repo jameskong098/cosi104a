@@ -1,7 +1,7 @@
 from sklearn.metrics import cohen_kappa_score
 from data_loader import load_data, prepare_test_data
 from pre_processor import preprocess_data
-from model import train_model, quadratic_weighted_kappa
+from model import train_model
 
 def main():
     # Load and preprocess the data
